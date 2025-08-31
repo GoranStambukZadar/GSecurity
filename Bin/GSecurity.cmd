@@ -71,16 +71,6 @@ sc config LanmanWorkstation start= disabled
 sc config LanmanServer start= disabled
 sc config seclogon start= disabled
 
-:: Install RamCleaner
-mkdir %windir%\Setup\Scripts 2>NUL
-mkdir %windir%\Setup\Scripts\Bin 2>NUL
-copy /y emptystandbylist.exe %windir%\Setup\Scripts\Bin\emptystandbylist.exe
-copy /y RamCleaner.bat %windir%\Setup\Scripts\Bin\RamCleaner.bat
-schtasks /create /tn "RamCleaner" /xml "RamCleaner.xml" /ru "SYSTEM"
-
-:: ELAM driver
-pnputil /add-driver *.inf /subdirs /install
-
 :: Mini filter drivers
 fltmc unload bfs
 fltmc unload unionfs
@@ -138,8 +128,6 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "Con
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorUser" /t REG_DWORD /d "1" /f
 
 :: Perms
-takeown /f %windir%\System32\Oobe\useroobe.dll /A
-icacls %windir%\System32\Oobe\useroobe.dll /inheritance:r
 icacls "%systemdrive%\Users" /remove "Everyone"
 takeown /f "%USERPROFILE%\Desktop" /r /d y
 icacls "%USERPROFILE%\Desktop" /inheritance:r
@@ -152,17 +140,12 @@ icacls "C:\Users\Public\Desktop" /inheritance:r
 icacls "C:\Users\Public\Desktop" /grant:r %username%:(OI)(CI)F /t /l /q /c
 icacls "C:\Users\Public\Desktop" /remove "System" /t /c /l
 icacls "C:\Users\Public\Desktop" /remove "Administrators" /t /c /l
+takeown /f %windir%\System32\Oobe\useroobe.dll /A
+icacls %windir%\System32\Oobe\useroobe.dll /inheritance:r
 for %%D in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
         icacls "%%D:\" /inheritance:d /remove:g "Authenticated Users" /C
         icacls "%%D:\" /grant:r "Authenticated Users:(RX)" /C
 )
-
-:: GPSvc service
-set "regkey=HKLM\SYSTEM\CurrentControlSet\Services\gpsvc"
-SetACL.exe -on "%regkey%" -ot reg -actn setowner -ownr "n:Administrators"
-SetACL.exe -on "%regkey%" -ot reg -actn rst -rst "dacl"
-SetACL.exe -on "%regkey%" -ot reg -actn ace -ace "n:Administrators;p:full"
-reg add "%regkey%" /v Start /t REG_DWORD /d 4 /f
 
 :: Security Policy
 LGPO.exe /s GSecurity.inf
