@@ -14,5 +14,5 @@ They may also try to determine what mouse you use and infect it with a macro tha
 If they add you to their Azure environment, or use any other c control app, they can use the Azure dashboard to push policies to all computers under their control or use them for DDoS attacks.
 
 This script is designed to be added to official windows iso, and prevent this bullshit from even starting. Essentially it runs a script after you reach desktop, which removes permissions from useroobe.dll, removes prebuilt user and disables and stops secondary logon. 
-So, nobody can create new users, but, that means hackers have zero permissions on your pc, so anything they would normally do is blocked. Add this to a windows installation flashdrive, install windows, and surf without fear of anything. No need to escape to Linux. 
+So, nobody can create new users, which means hackers have zero permissions on your pc, so anything they would normally do is blocked. Add this to a windows installation flashdrive, install windows, and surf without fear of anything. No need to escape to Linux. 
 Windows is a safe enviroment with this script. Note this script is designed to protect you from baddies, not protect you if you're a baddie yourself.
